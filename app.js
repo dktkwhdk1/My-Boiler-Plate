@@ -3,11 +3,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 class App {
-  constructor() {
+  constructor(routes) {
     this.app = express();
     this.port = process.env.PORT || 3000;
 
     this.connectToDatabase();
+    this.initializeMiddlewares();
+    this.initializeRoutes(routes);
   }
 
   listen() {
@@ -25,6 +27,17 @@ class App {
       .catch(error => {
         console.error(`🔴 Unable to connect to the database: ${error}.`);
       });
+  }
+
+  initializeMiddlewares() {
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.json());
+  }
+
+  initializeRoutes(routes) {
+    routes.forEach(route => {
+      this.app.use('/', route.router);
+    });
   }
 }
 
