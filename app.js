@@ -1,6 +1,7 @@
 import { dbConnection } from './database/index.js';
 import express from 'express';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 
 class App {
   constructor(routes) {
@@ -32,6 +33,7 @@ class App {
   initializeMiddlewares() {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
+    this.app.use(cookieParser());
   }
 
   initializeRoutes(routes) {
