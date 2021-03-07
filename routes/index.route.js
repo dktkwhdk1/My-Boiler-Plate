@@ -54,7 +54,7 @@ class IndexRoute {
       });
     });
 
-    this.app.get('/api/users/auth', authMiddleware, (req, res) => {
+    this.router.get('/api/users/auth', authMiddleware, (req, res) => {
       const { _id, email, name, lastname, role, image } = req.user;
       res.status(200).json({
         _id,
@@ -66,6 +66,19 @@ class IndexRoute {
         role,
         image,
       });
+    });
+
+    this.router.get('/api/users/logout', authMiddleware, (req, res) => {
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        { token: '' },
+        (err, user) => {
+          if (err) return res.json({ success: false, message: err });
+          return res.status(200).send({
+            success: true,
+          });
+        }
+      );
     });
   }
 }
