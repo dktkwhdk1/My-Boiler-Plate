@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import User from '../models/User.model.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
 
 class IndexRoute {
   path = '/';
@@ -52,7 +53,27 @@ class IndexRoute {
         });
       });
     });
+
+    this.app.get('/api/users/auth', authMiddleware, (req, res) => {
+      const { _id, email, name, lastname, role, image } = req.user;
+      res.status(200).json({
+        _id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email,
+        name,
+        lastname,
+        role,
+        image,
+      });
+    });
   }
 }
 
 export default IndexRoute;
+
+/**
+ * 1. Client Cookie에 저장된 Token을 Server에서 가져와서 복호화
+ * 2. 복호화 후 UserID가 나오는데 그 UserID를 이용해서 데이터 베이스에서 유저를 찾고, 유저의 쿠키에서 받아온 Token 확인
+ * 3. 쿠키가 일치하다면 Authentication True 아니라면 Authentication False
+ */

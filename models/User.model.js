@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { decode } from 'jsonwebtoken';
 
 const saltRounds = 10;
 
@@ -67,6 +67,17 @@ userSchema.methods.generateToken = function (cb) {
   user.save(function (err, user) {
     if (err) return cb(err);
     cb(null, user);
+  });
+};
+
+// https://backend-intro.vlpt.us/3/03.html : statics와 methods의 차이
+userSchema.statics.findByToken = function (token, cb) {
+  const user = this;
+  jwt.verify(token, 'secretToken', function (err, decoded) {
+    user.findOne({ _id: decoded, token: token }, function (err, user) {
+      if (err) return cb(err);
+      cb(null, user);
+    });
   });
 };
 
