@@ -80,6 +80,10 @@ class IndexRoute {
         }
       );
     });
+
+    this.router.get('/api/hello', (req, res) => {
+      res.send('hello');
+    });
   }
 }
 
