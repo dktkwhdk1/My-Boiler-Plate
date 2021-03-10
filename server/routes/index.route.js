@@ -15,7 +15,7 @@ class IndexRoute {
       res.send('hello');
     });
 
-    this.router.post(`/register`, (req, res) => {
+    this.router.post(`/api/users/register`, (req, res) => {
       const user = new User(req.body);
       user.save((err, userInfo) => {
         if (err) return res.json({ success: false, message: err });
@@ -23,7 +23,7 @@ class IndexRoute {
       });
     });
 
-    this.router.post('/login', (req, res) => {
+    this.router.post('/api/users/login', (req, res) => {
       User.findOne({ email: req.body.email }, (err, user) => {
         if (!user) {
           return res.json({
